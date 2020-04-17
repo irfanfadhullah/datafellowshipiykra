@@ -1,0 +1,27 @@
+/*Practice Case Week 2*/
+/*giving recommendation for film about astronaut*/
+select * from film where fulltext @@ to_tsquery('astronaut');
+
+/*Select film which has rating='R' and replacement cost between $5 and $15*/
+select rating,replacement_cost from film where rating='R' and replacement_cost between 5 and 15;
+
+/*Giving bonus to staff member, so find how many payment did they handle and how much total amount process*/
+select staff_id, count(payment_id), sum(amount) from payment group by staff_id order by sum(amount) desc;
+
+/*Finding average replacement cost of movies by rating*/
+select avg(replacement_cost), rating from film group by rating;
+
+/*Finding customer name,email, and their spent amoount*/
+select customer.first_name, customer.last_name, customer.email, sum(payment.amount) from customer 
+left join payment on customer.customer_id = payment.customer_id 
+group by customer.email, customer.first_name , customer.last_name 
+order by sum(payment.amount) desc limit 5;
+
+/*Finding stock film in each store*/
+select count(film_id), store_id from inventory group by store_id;
+
+/*Finding the customer name, email at least higher than 40 transaction payment*/
+select customer.first_name, customer.last_name, customer.email, count(payment.payment_id) from customer 
+left join payment on customer.customer_id = payment.customer_id
+group by customer.first_name, customer.last_name, customer.email having count(payment.payment_id)>=40 
+order by count(payment.payment_id) desc;
